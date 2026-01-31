@@ -1,0 +1,131 @@
+{\rtf1\ansi\ansicpg1252\cocoartf2867
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fswiss\fcharset0 Helvetica;}
+{\colortbl;\red255\green255\blue255;}
+{\*\expandedcolortbl;;}
+\paperw11900\paperh16840\margl1440\margr1440\vieww11520\viewh8400\viewkind0
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+
+\f0\fs24 \cf0 <!DOCTYPE html>\
+<html lang="fr">\
+<head>\
+    <meta charset="UTF-8">\
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">\
+    <title>Cin\'e9-S\'e9lecteur Gemini</title>\
+    <style>\
+        body \{ font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #1a1a2e; color: white; display: flex; justify-content: center; padding: 20px; \}\
+        .container \{ max-width: 500px; width: 100%; background: #16213e; padding: 30px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); \}\
+        h1 \{ color: #e94560; text-align: center; \}\
+        .form-group \{ margin-bottom: 15px; \}\
+        label \{ display: block; margin-bottom: 5px; font-size: 0.9em; color: #0f3460; background: #e94560; padding: 2px 8px; border-radius: 4px; display: inline-block; color: white; \}\
+        select, input \{ width: 100%; padding: 10px; border-radius: 5px; border: none; background: #0f3460; color: white; margin-top: 5px; \}\
+        button \{ width: 100%; padding: 12px; background: #e94560; border: none; color: white; font-weight: bold; border-radius: 5px; cursor: pointer; margin-top: 20px; \}\
+        button:hover \{ background: #ff5e78; \}\
+        #result \{ margin-top: 25px; padding: 15px; border-left: 4px solid #e94560; background: rgba(255,255,255,0.05); display: none; line-height: 1.6; \}\
+        .loader \{ display: none; text-align: center; margin-top: 10px; font-style: italic; color: #0f3460; \}\
+    </style>\
+</head>\
+<body>\
+\
+<div class="container">\
+    <h1>\uc0\u55356 \u57260  Cin\'e9-S\'e9lecteur</h1>\
+    \
+    <div class="form-group">\
+        <label>Cl\'e9 API Gemini :</label>\
+        <input type="password" id="apiKey" placeholder="Collez votre cl\'e9 API ici...">\
+    </div>\
+\
+    <hr style="border: 0.5px solid #0f3460; margin: 20px 0;">\
+\
+    <div class="form-group">\
+        <label>1. Quelle est l'ambiance recherch\'e9e ?</label>\
+        <select id="q1">\
+            <option value="joyeuse et l\'e9g\'e8re">Joyeuse et l\'e9g\'e8re</option>\
+            <option value="sombre et myst\'e9rieuse">Sombre et myst\'e9rieuse</option>\
+            <option value="\'e9pique et pleine d'action">\'c9pique et pleine d'action</option>\
+            <option value="intellectuelle et profonde">Intellectuelle et profonde</option>\
+        </select>\
+    </div>\
+\
+    <div class="form-group">\
+        <label>2. De combien de temps dispenses-tu ?</label>\
+        <select id="q2">\
+            <option value="moins de 1h30">Un film court (-1h30)</option>\
+            <option value="environ 2h">Standard (~2h)</option>\
+            <option value="plus de 2h30">Une grande \'e9pop\'e9e (+2h30)</option>\
+        </select>\
+    </div>\
+\
+    <div class="form-group">\
+        <label>3. \'c9poque du film ?</label>\
+        <select id="q3">\
+            <option value="un classique en noir et blanc">Classique (Noir & Blanc)</option>\
+            <option value="des ann\'e9es 80-90">Ann\'e9es 80-90</option>\
+            <option value="tr\'e8s r\'e9cent">Moderne (Sortie r\'e9cente)</option>\
+        </select>\
+    </div>\
+\
+    <div class="form-group">\
+        <label>4. Quel ingr\'e9dient est indispensable ?</label>\
+        <select id="q4">\
+            <option value="un twist final incroyable">Un twist final</option>\
+            <option value="des paysages magnifiques">Des visuels \'e9poustouflants</option>\
+            <option value="beaucoup d'humour">De l'humour</option>\
+            <option value="une \'e9motion forte">Des larmes / \'c9motion</option>\
+        </select>\
+    </div>\
+\
+    <button onclick="getRecommendation()">Trouver mon film</button>\
+    \
+    <div id="loader" class="loader">Gemini r\'e9fl\'e9chit... \uc0\u55356 \u57215 </div>\
+    <div id="result"></div>\
+</div>\
+\
+<script>\
+async function getRecommendation() \{\
+    const key = document.getElementById('apiKey').value;\
+    const resultDiv = document.getElementById('result');\
+    const loader = document.getElementById('loader');\
+\
+    if (!key) \{\
+        alert("S'il te pla\'eet, entre ta cl\'e9 API Gemini.");\
+        return;\
+    \}\
+\
+    // R\'e9cup\'e9ration des r\'e9ponses\
+    const r1 = document.getElementById('q1').value;\
+    const r2 = document.getElementById('q2').value;\
+    const r3 = document.getElementById('q3').value;\
+    const r4 = document.getElementById('q4').value;\
+\
+    loader.style.display = "block";\
+    resultDiv.style.display = "none";\
+\
+    const prompt = `Agis comme un expert en cin\'e9ma. Trouve-moi UN seul film pr\'e9cis bas\'e9 sur ces crit\'e8res : \
+    Ambiance: $\{r1\}, Dur\'e9e: $\{r2\}, \'c9poque: $\{r3\}, Ingr\'e9dient sp\'e9cial: $\{r4\}. \
+    Donne le titre en gras, une courte explication du pourquoi ce choix et o\'f9 le regarder si possible. R\'e9ponse en fran\'e7ais.`;\
+\
+    try \{\
+        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=$\{key\}`, \{\
+            method: 'POST',\
+            headers: \{ 'Content-Type': 'application/json' \},\
+            body: JSON.stringify(\{\
+                contents: [\{ parts: [\{ text: prompt \}] \}]\
+            \})\
+        \});\
+\
+        const data = await response.json();\
+        const text = data.candidates[0].content.parts[0].text;\
+        \
+        resultDiv.innerHTML = text.replace(/\\n/g, "<br>");\
+        resultDiv.style.display = "block";\
+    \} catch (error) \{\
+        alert("Erreur : V\'e9rifie ta cl\'e9 API ou ta connexion.");\
+        console.error(error);\
+    \} finally \{\
+        loader.style.display = "none";\
+    \}\
+\}\
+</script>\
+\
+</body>\
+</html>}
